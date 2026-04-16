@@ -127,6 +127,7 @@ tr.rbl>td:first-child{border-left:2px solid transparent}
 
 <div class="top">
   <span class="logo">2H</span>
+  <span class="ts" id="ts" style="color:rgba(255,255,255,0.4);font-size:11px">—</span>
   <select onchange="setSrc(this.value)">
     <option value="intraday">Live</option>
     <option value="eod">Daily</option>
@@ -219,7 +220,15 @@ async function load(){
       eodMap={};
       eodData.forEach(r=>{eodMap[r.symbol]={timing:r.entry_timing,signal:r.regime_signal};});
     }
-    // timestamp not needed - mode selector shows Live/Daily
+    // Show data freshness timestamp from Supabase
+    const tsEl = document.getElementById('ts');
+    if(tsEl && all.length){
+      if(src==='intraday' && all[0].updated_at){
+        tsEl.textContent = new Date(all[0].updated_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      } else if(src==='eod' && all[0].bar_date){
+        tsEl.textContent = all[0].bar_date;
+      }
+    }
     buildGroups();counts();af();
   }catch(e){document.getElementById('tb').innerHTML=`<tr><td colspan="21" class="msg">Error — ${e.message}</td></tr>`;}
 }
@@ -352,7 +361,7 @@ function pillHtml(sg){
   return'<span style="color:#fff">Block</span>';
 }
 
-// 3-colour rule + dim red for danger traps
+// 3-colour rule: green=buy signal, white=neutral/wait, red=warning/danger
 const TIMING_STYLE={
   'CONFIRMED':   'color:#fff',
   'COOLING':     'color:#00e676',
@@ -360,11 +369,14 @@ const TIMING_STYLE={
   'PAUSE':       'color:#fff',
   'IGNITION':    'color:#00e676',
   'TREND HOLD':  'color:#fff',
-  'TREND FADE':  'color:#fff',
-  'WEAK DIP':    'color:#fff',
+  'TREND FADE':  'color:#ff1744',
+  'WEAK DIP':    'color:#ff1744',
   'EXT RISK':    'color:#ff1744',
   'EXTENDED':    'color:#ff1744',
   'DEAD CAT':    'color:#ff1744',
+  'WAIT':        'color:#fff',
+  'EXIT':        'color:#ff1744',
+};
   'WAIT':        'color:#fff',
   'EXIT':        'color:#ff1744',
 };
