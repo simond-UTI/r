@@ -3,11 +3,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>R·Universe</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap');
-html,body{height:100%;margin:0;padding:0;background:#13151a;font-family:'Roboto Mono',monospace;font-size:12px;line-height:1;color:#fff}
+html,body{height:100%;margin:0;padding:0;background:#13151a;font-family:'Roboto Mono',monospace;font-size:12px;line-height:1;color:#fff;overflow-x:hidden}
 *{box-sizing:border-box}
 
 .top{display:flex;align-items:center;gap:24px;padding:10px 16px}
@@ -29,7 +29,7 @@ select option{background:#13151a;color:#fff}
 .sp.gxt{color:#ff1744!important;border-bottom-color:#ff1744}
 .sp.gmo{border-bottom-color:#fff}
 
-.wrap{overflow:auto;height:calc(100vh - 64px)}
+.wrap{overflow-x:auto;overflow-y:auto;height:calc(100vh - 64px);-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:max-content}
 thead{position:sticky;top:0;background:#13151a;z-index:10}
 
@@ -100,7 +100,7 @@ tr.rbl>td:first-child{border-left:2px solid transparent}
 
 .ru{color:#00e676!important}.rd{color:#ff1744!important}
 
-@media(max-width:700px){.hm{display:none}}
+@media(max-width:700px){.hm{display:table-cell}}
 .msg{padding:40px 16px;color:rgba(255,255,255,0.25);font-size:12px}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-track{background:#13151a}
@@ -403,4 +403,3 @@ load();
 setInterval(load,3*60*1000);
 </script>
 </body>
-</html>
