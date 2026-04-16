@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R·Universe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap');
+html,body{height:100%;margin:0;padding:0;background:#13151a;font-family:'Roboto Mono',monospace;font-size:12px;line-height:1;color:#fff}
+*{box-sizing:border-box}
+
+.top{display:flex;align-items:center;gap:24px;padding:10px 16px}
+.logo{font-size:14px;font-weight:600;color:#fff;white-space:nowrap}
+.ts{font-size:12px;color:#fff}
+select{background:transparent;border:none;outline:none;font-family:'Roboto Mono',monospace;font-size:12px;color:#fff;cursor:pointer;-webkit-appearance:none}
+select option{background:#13151a;color:#fff}
+.sr{margin-left:auto}
+.sr input{background:transparent;border:none;outline:none;border-bottom:1px solid rgba(255,255,255,0.25);font-family:'Roboto Mono',monospace;font-size:12px;color:#fff;width:160px;padding:2px 0}
+.sr input::placeholder{color:rgba(255,255,255,0.4)}
+.sr input:focus{border-bottom-color:#fff}
+
+.sb{display:flex;gap:0;padding:4px 16px;border-bottom:1px solid rgba(255,255,255,0.12)}
+/* stats bar — full white always, only underline distinguishes active */
+.sp{font-size:11px;color:#fff;cursor:pointer;padding:3px 20px 3px 0;border-bottom:2px solid transparent;white-space:nowrap}
+.sp:hover{opacity:0.7}
+.sp.on{border-bottom-color:#fff}
+.sp.ghc{color:#00e676!important;border-bottom-color:#00e676}
+.sp.gxt{color:#ff1744!important;border-bottom-color:#ff1744}
+.sp.gmo{border-bottom-color:#fff}
+
+.wrap{overflow:auto;height:calc(100vh - 64px)}
+table{border-collapse:collapse;width:max-content}
+thead{position:sticky;top:0;background:#13151a;z-index:10}
+
+table{border-collapse:separate;border-spacing:0;width:max-content}
+thead{position:sticky;top:0;background:#13151a;z-index:10}
+
+/* group header track */
+tr.gh>th{
+  font-size:11px;font-weight:600;color:#fff!important;
+  letter-spacing:0.12em;text-transform:uppercase;
+  padding:5px 12px 5px 0;text-align:left;
+  background:#13151a;cursor:default;white-space:nowrap;
+  border:none
+}
+tr.gh>th.blank{padding:0}
+tr.gh>th:first-child{padding-left:16px}
+tr.gh>th.gend{padding-right:32px!important}
+
+/* group gaps — pure padding, no borders, no squashing */
+td.gsep{padding-left:24px!important}
+tr.ch>th.gsep{padding-left:24px!important}
+tr.gh>th.gsep{padding-left:24px!important}
+/* wider gap between Identity and Signal groups */
+td.gsep-lg{padding-left:36px!important}
+tr.ch>th.gsep-lg{padding-left:36px!important}
+tr.gh>th.gsep-lg{padding-left:36px!important}
+
+/* col headers */
+tr.ch>th{
+  font-size:12px;font-weight:600;color:#fff!important;
+  padding:4px 12px 5px 0;text-align:left!important;
+  background:#13151a;border-bottom:1px solid rgba(255,255,255,0.15);
+  cursor:pointer;white-space:nowrap;user-select:none
+}
+tr.ch>th:first-child{padding-left:16px}
+tr.ch>th:hover{color:#00e676!important}
+tr.ch>th.s{color:#00e676!important}
+tr.ch>th.gend{padding-right:32px!important}
+
+/* data cells */
+td{
+  padding:0 12px 0 0;height:26px;
+  border:none;vertical-align:middle;
+  white-space:nowrap;text-align:left;
+  font-size:12px;color:#fff!important
+}
+td.r{text-align:right}
+td:first-child{padding-left:16px}
+td.gend{padding-right:32px!important}
+tr:hover>td{background:rgba(255,255,255,0.04)}
+
+tr.rhc>td:first-child{border-left:2px solid #00e676}
+tr.rxt>td:first-child{border-left:2px solid #ff1744}
+tr.rmo>td:first-child{border-left:2px solid transparent}
+tr.rbl>td:first-child{border-left:2px solid transparent}
+
+.cg{color:#00e676!important}
+.cr{color:#ff1744!important}
+.cw{color:#fff!important}
+.cdim{color:rgba(255,255,255,0.2)!important}
+
+.bold{font-weight:600}
+.desc-col{max-width:140px;overflow:hidden;text-overflow:ellipsis;display:block;white-space:nowrap}
+
+.gears{display:inline-flex;gap:5px;align-items:center}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
+.don{background:#00e676}.dof{background:#ff1744}.dnu{background:rgba(255,255,255,0.15)}
+
+.ru{color:#00e676!important}.rd{color:#ff1744!important}
+
+@media(max-width:700px){.hm{display:none}}
+.msg{padding:40px 16px;color:rgba(255,255,255,0.25);font-size:12px}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:#13151a}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
+
+/* tooltips */
+.tip{position:relative;cursor:help}
+.tip::after{
+  content:attr(data-tip);
+  position:absolute;top:calc(100% + 6px);left:0;
+  background:#0d0f13;border:1px solid rgba(255,255,255,0.2);
+  color:#fff;font-size:11px;font-weight:400;line-height:1.5;
+  padding:8px 10px;border-radius:4px;
+  width:220px;white-space:normal;
+  z-index:100;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;
+  font-family:'Roboto Mono',monospace;
+  letter-spacing:0
+}
+.tip:hover::after{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <span class="logo">R·Universe</span>
+  <span class="ts" id="ts">—</span>
+  <select onchange="setSrc(this.value)">
+    <option value="intraday">Intraday</option>
+    <option value="eod">EOD</option>
+  </select>
+  <select onchange="setWL(this.value)">
+    <option value="UK ETFS">UK</option>
+    <option value="MAIN">US</option>
+    <option value="">All</option>
+  </select>
+  <select id="gsel" onchange="setGrp(this.value)">
+    <option value="">All Groups</option>
+  </select>
+  <div class="sr"><input id="sr" placeholder="Search…" oninput="af()"></div>
+</div>
+
+<div class="sb">
+  <div class="sp on"  id="sp-all"  onclick="setSig('ALL')">ALL —</div>
+  <div class="sp"     id="sp-hc"   onclick="setSig('HIGH CONVICTION')">CONVICTION —</div>
+  <div class="sp"     id="sp-mon"  onclick="setSig('MONITOR')">MONITOR —</div>
+  <div class="sp"     id="sp-ext"  onclick="setSig('EXTENDED')">EXTENDED —</div>
+  <div class="sp"     id="sp-exit" onclick="setSig('EXIT')">EXIT —</div>
+  <div class="sp"     id="sp-blk"  onclick="setSig('BLOCK')">BLOCK —</div>
+</div>
+
+<div class="wrap">
+<table>
+  <thead>
+    <tr class="gh">
+      <th class="blank" colspan="2"></th>
+      <th colspan="4" class="gsep-lg gend">Signal</th>
+      <th colspan="3" class="gsep hm gend">Trend</th>
+      <th colspan="2" class="gsep gend">Velocity</th>
+      <th colspan="2" class="gsep hm gend">Volatility</th>
+      <th colspan="4" class="gsep hm gend">Price</th>
+      <th colspan="2" class="gsep hm">Rank</th>
+    </tr>
+    <tr class="ch">
+      <th style="min-width:70px;padding-left:16px" onclick="sb('symbol')">Ticker</th>
+      <th class="hm" style="min-width:100px;max-width:120px" onclick="sb('name')">Description</th>
+      <th class="gsep-lg tip" style="min-width:48px" onclick="sb('regime_id')" data-tip="4-digit physics code: Volatility × Trend × Velocity × Price. e.g. 2221 = Expanded vol / Monster trend / Aligned gears / Normal price.">DNA</th>
+      <th class="tip" style="min-width:80px" onclick="sb('regime_signal')" data-tip="Derived from DNA regime_id. Conviction = vol expanded/normal + trend >8 + specific gear/price combinations qualify. Monitor = trend positive but physics partial. Exit = A=0, cascade broken. Block = trend ≤8 or vol compressed.">Signal</th>
+      <th class="gend tip" style="min-width:90px" onclick="sb('entry_timing')" data-tip="Backtest validated (7wk, 133k obs). 🟢 Cooling +2.3% 100%pos | Ignition +2.5% 95%pos | Confirmed +2.0% 93%pos. 🟡 Trend Hold +3.0% 100%pos (volatile) | Pause +0.4% 66%pos (M5 coughing, wait). 🔴 Weak Dip -1.2% 28%pos | Trend Fade -0.3% 42%pos | Dead Cat | Exit -4%. Extended/Ext Risk keep running — momentum continuation.">Timing</th>
+      <th class="hm tip" style="min-width:80px" data-tip="EOD (daily close) timing signal. Compare to Live Timing: if they agree = trust it. If Live=Exit but EOD=Confirmed = noise, wait. If both=Exit = act immediately.">EOD</th>
+      <th class="gsep hm tip" style="min-width:50px" onclick="sb('trend')" data-tip="Trend score −100 to +100. Above 8 = Bull trend. Below −8 = Bear trend. Between −8 and 8 = Neutral. Above 80 = Monster trend. Below 8 blocks entries.">Trend</th>
+      <th class="hm tip" style="min-width:50px" onclick="sb('momentum')" data-tip="Momentum score −100 to +100. Above 8 = positive momentum. Below −8 = negative momentum. Between −8 and 8 = neutral. Measures the strength and direction of the current move.">Trade</th>
+      <th class="hm gend tip" style="min-width:24px" onclick="sb('t_digit')" data-tip="Trend digit. 0 = Bear (≤8). 1 = Bull (8–80). 2 = Monster (>80).">T</th>
+      <th class="gsep tip" style="min-width:56px" onclick="sb('mom_d5')" data-tip="Three-gear physics: Fast (M5 price) / Medium (M10 price) / Structural (5D trend change). All green = Full Throttle. Third dot red = structure weakening.">Gears</th>
+      <th class="gend tip" style="min-width:24px" onclick="sb('a_digit')" data-tip="Velocity state. 0 = Cascade broken. 1 = Pausing (fast −, medium +). 2 = Aligned (all gears +). 3 = Ignition (fast + structural firing, medium not confirmed).">A</th>
+      <th class="gsep hm tip" style="min-width:76px" onclick="sb('vol_regime')" data-tip="ATR-based volatility regime. Compressed blocks all entries. Normal and Expanded allow entries.">Regime</th>
+      <th class="hm gend tip" style="min-width:24px" onclick="sb('v_digit')" data-tip="Volatility digit. 0 = Compressed (blocked). 1 = Normal. 2 = Expanded (trending conditions).">V</th>
+      <th class="gsep hm tip" style="min-width:52px" onclick="sb('price_d5_z')" data-tip="Z-score vs 5-day mean. 0.7–0.85 = approaching caution. Above 0.85 = Ext Risk trigger (with R20). Above 1.25 = Extended (hard block). Below 0.7 = breakout bypass — Confirmed regardless of R20.">Price Z</th>
+      <th class="hm tip" style="min-width:44px" onclick="sb('range_pos_20d')" data-tip="Position within 20-day price range. 0=at 20d low, 1=at 20d high. Above 0.9 = Extended (hard block). Above 0.75 = Ext Risk. Catches medium-term extension that Price Z misses.">R20</th>
+      <th class="hm" style="min-width:54px" onclick="sb('perf_1d')">1D%</th>
+      <th class="hm gend" style="min-width:54px" onclick="sb('perf_5d')">5D%</th>
+      <th class="gsep hm tip" style="min-width:40px" onclick="sb('rank')" data-tip="Universe rank by composite score (~70% trend, ~30% momentum). Rank 1 = strongest in universe.">Rank</th>
+      <th class="hm tip" style="min-width:44px" onclick="sb('rank_move')" data-tip="Rank movement since last session. ▲ rising = gaining strength. ▼ falling = losing position.">R Mv</th>
+    </tr>
+  </thead>
+  <tbody id="tb"><tr><td colspan="19" class="msg">Loading…</td></tr></tbody>
+</table>
+</div>
+
+<script>
+const SURL='https://pzskvslhfaituzyukasl.supabase.co';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6c2t2c2xoZmFpdHV6eXVrYXNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNzQyNTAsImV4cCI6MjA3OTY1MDI1MH0.FEZTIIQ4zgdb7uswf70XZI9Ph6ykSeDkfxooIcRIOMw';
+const H={'apikey':KEY,'Authorization':'Bearer '+KEY};
+const COLS='symbol,name,group_name,watchlist,trend,momentum,mom_d5,mom_d10,trend_d5,price_d5_z,range_pos_20d,perf_1d,perf_5d,rank,rank_move,vol_regime,v_digit,t_digit,a_digit,p_digit,regime_id,regime_signal,entry_timing';
+let all=[],eodMap={},filt=[],sc='_tier',sd=1,sig='ALL',src='intraday',wl='UK ETFS',grp='';
+const TIER={'HIGH CONVICTION':1,'MONITOR':2,'EXTENDED':3,'EXIT':4,'BLOCK':5};
+const TIMING_TIER={'COOLING':1,'IGNITION':2,'CONFIRMED':3,'TREND HOLD':4,'DIP ENTRY':5,'EXT RISK':6,'EXTENDED':7,'TREND FADE':8,'WEAK DIP':9,'DEAD CAT':10,'WAIT':11,'EXIT':12};
+const tsort=r=>(TIER[r.regime_signal]||6)*100000+(TIMING_TIER[r.entry_timing]||5)*1000+(r.rank&&r.rank<900?r.rank:9999);
+const bst=()=>new Date().toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour:'2-digit',minute:'2-digit'})+' BST';
+setInterval(()=>{const e=document.getElementById('ts');if(e&&src==='intraday')e.textContent='Live '+bst();},30000);
+
+async function load(){
+  const v=src==='intraday'?'r_universe_live':'r_universe';
+  try{
+    // Always fetch both live and EOD in parallel
+    const [res, eodRes] = await Promise.all([
+      fetch(`${SURL}/rest/v1/${v}?select=${COLS}&limit=500`,{headers:H}),
+      fetch(`${SURL}/rest/v1/r_universe?select=symbol,entry_timing,regime_signal&limit=500`,{headers:H})
+    ]);
+    if(!res.ok)throw new Error(res.status);
+    all=await res.json();
+    // Build EOD lookup map
+    if(eodRes.ok){
+      const eodData=await eodRes.json();
+      eodMap={};
+      eodData.forEach(r=>{eodMap[r.symbol]={timing:r.entry_timing,signal:r.regime_signal};});
+    }
+    document.getElementById('ts').textContent=src==='intraday'?'Live '+bst():'EOD';
+    buildGroups();counts();af();
+  }catch(e){document.getElementById('tb').innerHTML=`<tr><td colspan="19" class="msg">Error — ${e.message}</td></tr>`;}
+}
+
+function setSrc(s){src=s;load();}
+function setWL(w){wl=w;buildGroups();counts();af();}
+function setGrp(g){grp=g;counts();af();}
+
+function buildGroups(){
+  const b=wl?all.filter(r=>r.watchlist===wl||r.watchlist==='BOTH'):all;
+  const gs=[...new Set(b.map(r=>r.group_name).filter(Boolean))].sort();
+  const sel=document.getElementById('gsel');
+  const cur=sel.value;
+  sel.innerHTML='<option value="">All Groups</option>'+gs.map(g=>`<option value="${g}"${g===cur?' selected':''}>${g}</option>`).join('');
+  if(!gs.includes(grp)){sel.value='';grp='';}
+}
+
+function base(){
+  return all.filter(r=>{
+    if(wl&&r.watchlist!==wl&&r.watchlist!=='BOTH')return false;
+    if(grp&&r.group_name!==grp)return false;
+    return true;
+  });
+}
+
+function counts(){
+  const b=base(),c={'HIGH CONVICTION':0,'MONITOR':0,'EXTENDED':0,'EXIT':0,'BLOCK':0};
+  b.forEach(r=>{if(c[r.regime_signal]!=null)c[r.regime_signal]++;});
+  [['all',b.length,'ALL'],['hc',c['HIGH CONVICTION'],'CONVICTION'],
+   ['mon',c['MONITOR'],'MONITOR'],['ext',c['EXTENDED'],'EXTENDED'],
+   ['exit',c['EXIT'],'EXIT'],['blk',c['BLOCK'],'BLOCK']]
+  .forEach(([id,n,l])=>document.getElementById('sp-'+id).textContent=l+' '+n);
+}
+
+const SM={'ALL':['all','on'],'HIGH CONVICTION':['hc','ghc'],'MONITOR':['mon','gmo'],'EXTENDED':['ext','gxt'],'EXIT':['exit','gxt'],'BLOCK':['blk','on']};
+function setSig(v){
+  sig=v;
+  Object.keys(SM).forEach(k=>document.getElementById('sp-'+SM[k][0]).className='sp');
+  const[id,cl]=SM[v]||['all','on'];
+  document.getElementById('sp-'+id).className='sp '+cl;
+  af();
+}
+
+function af(){
+  const s=document.getElementById('sr').value.toLowerCase();
+  filt=base().filter(r=>{
+    if(sig!=='ALL'&&r.regime_signal!==sig)return false;
+    if(s&&!(r.symbol||'').toLowerCase().includes(s)&&!(r.name||'').toLowerCase().includes(s)&&!(r.group_name||'').toLowerCase().includes(s))return false;
+    return true;
+  });
+  sort();render();
+}
+
+function sb(c){
+  if(sc===c)sd*=-1;else{sc=c;sd=c==='_tier'?1:-1;}
+  document.querySelectorAll('tr.ch th').forEach(t=>t.classList.remove('s'));
+  event?.target?.classList.add('s');
+  sort();render();
+}
+
+function sort(){
+  filt.sort((a,b)=>{
+    if(sc==='_tier')return tsort(a)-tsort(b);
+    let av=a[sc],bv=b[sc];
+    if(av==null)av=sd>0?Infinity:-Infinity;
+    if(bv==null)bv=sd>0?Infinity:-Infinity;
+    if(typeof av==='string')return av.localeCompare(bv)*sd;
+    return(av-bv)*sd;
+  });
+}
+
+// Price Z: >1.5 or <-1.5 = red, -0.5 to +0.5 = white, else white (no amber)
+const pzCol=v=>{
+  if(v==null||isNaN(v))return'cw';
+  const f=parseFloat(v);
+  return(f>1.5||f<-1.5)?'cr':'cw';
+};
+const mc=v=>{if(v==null||isNaN(v))return'cw';const f=parseFloat(v);return f>8?'cg':f<-8?'cr':'cw';};
+// dc: digit colour — 0=red, 1=white, 2=green, 3=cyan (ignition)
+// digits always white — colour lives in Timing only
+const dc=v=>'cw';
+const dot=(v,ac)=>{
+  if(v==null||isNaN(parseFloat(v)))return'<span class="dot dnu"></span>';
+  return`<span class="dot ${parseFloat(v)>=0?'don':'dof'}"></span>`;
+};
+const num=(v,d=1)=>v==null||isNaN(v)?'<span class="cdim">—</span>':parseFloat(v).toFixed(d);
+const pct=v=>{
+  if(v==null||isNaN(v))return'<span class="cdim">—</span>';
+  const f=parseFloat(v);
+  return`<span class="${f>0?'cg':f<0?'cr':'cw'}">${f>=0?'+':''}${f.toFixed(2)}%</span>`;
+};
+const rmv=v=>{
+  if(v==null||v===''||v===undefined)return'<span style="color:rgba(255,255,255,0.2)">—</span>';
+  const i=parseInt(v);
+  if(isNaN(i)||i===0)return'<span style="color:rgba(255,255,255,0.2)">—</span>';
+  return`<span style="color:${i>0?'#00e676':'#ff1744'}">${i>0?'▲':'▼'}${Math.abs(i)}</span>`;
+};
+
+const VL={'EXP':'Expanded','NORM':'Normal','COMP':'Compressed'};
+const VC={'COMP':'cr','EXP':'cw','NORM':'cw'};
+const RC={'HIGH CONVICTION':'rhc','MONITOR':'rmo','EXTENDED':'rmo','EXIT':'rxt','BLOCK':'rbl'};
+
+function pillHtml(sg){
+  if(sg==='EXIT')return'<span style="color:#ff1744">Exit</span>';
+  if(sg==='HIGH CONVICTION')return'<span style="color:#fff">Conviction</span>';
+  if(sg==='MONITOR'||sg==='EXTENDED')return'<span style="color:#fff">Monitor</span>';
+  return'<span style="color:#fff">Block</span>';
+}
+
+// 3-colour rule + dim red for danger traps
+const TIMING_STYLE={
+  'CONFIRMED':   'color:#fff',
+  'COOLING':     'color:#00e676',
+  'DIP ENTRY':   'color:#fff',
+  'IGNITION':    'color:#00e676',
+  'TREND HOLD':  'color:#fff',
+  'TREND FADE':  'color:#fff',
+  'WEAK DIP':    'color:#fff',
+  'EXT RISK':    'color:#ff1744',
+  'EXTENDED':    'color:#ff1744',
+  'DEAD CAT':    'color:#ff1744',
+  'WAIT':        'color:#fff',
+  'EXIT':        'color:#ff1744',
+};
+const TIMING_LABEL={
+  'CONFIRMED':'Confirmed','COOLING':'Cooling','DIP ENTRY':'Pause',
+  'IGNITION':'Ignition','TREND HOLD':'Trend Hold','TREND FADE':'Trend Fade',
+  'WEAK DIP':'Weak Dip','EXT RISK':'Ext Risk','EXTENDED':'Extended',
+  'DEAD CAT':'Dead Cat','WAIT':'Wait','EXIT':'Exit',
+};
+
+function render(){
+  const tb=document.getElementById('tb');
+  if(!filt.length){tb.innerHTML='<tr><td colspan="19" class="msg">No results</td></tr>';return;}
+  tb.innerHTML=filt.map(r=>{
+    const sg=r.regime_signal||'MONITOR';
+    const dna=String(r.regime_id||0).padStart(4,'0');
+    const dnaHtml=`<span style="color:#fff;font-weight:500">${dna}</span>`;
+    const rnk=r.rank&&r.rank<900?r.rank:'<span class="cdim">—</span>';
+    const tim=r.entry_timing||'WAIT';
+    const timLbl=TIMING_LABEL[tim]||tim;
+    const timSty=TIMING_STYLE[tim]||'color:#fff';
+    const pzAbs=Math.abs(parseFloat(r.price_d5_z)||0);
+
+    // EOD signal lookup and conflict detection
+    const eod=eodMap[r.symbol];
+    const eodTim=eod?eod.timing:'';
+    const eodLbl=eodTim?(TIMING_LABEL[eodTim]||eodTim):'—';
+    // Conflict: live is danger signal but EOD is not
+    const dangerStates=['EXIT','DEAD CAT','WEAK DIP'];
+    const goodStates=['CONFIRMED','COOLING','IGNITION','TREND HOLD'];
+    const isConflict=dangerStates.includes(tim)&&(goodStates.includes(eodTim)||eodTim==='DIP ENTRY');
+    const isAgreed=dangerStates.includes(tim)&&dangerStates.includes(eodTim);
+    const eodStyle=isConflict?'color:#ffaa00':isAgreed?'color:#ff1744':(TIMING_STYLE[eodTim]||'color:#fff');
+    const eodHtml=eodTim?`<span style="${eodStyle}">${eodLbl}</span>`:'<span class="cdim">—</span>';
+
+    return`<tr class="${RC[sg]||'rmo'}">
+<td><span style="color:#fff;font-weight:600">${r.symbol}</span></td>
+<td class="hm"><span style="color:#fff;max-width:120px;overflow:hidden;text-overflow:ellipsis;display:block;white-space:nowrap">${r.name||''}</span></td>
+<td class="gsep-lg">${dnaHtml}</td>
+<td>${pillHtml(sg)}</td>
+<td><span style="${timSty}">${timLbl}</span></td>
+<td class="hm gend">${eodHtml}</td>
+<td class="gsep hm"><span class="${mc(r.trend)}">${num(r.trend)}</span></td>
+<td class="hm"><span class="${mc(r.momentum)}">${num(r.momentum)}</span></td>
+<td class="hm gend"><span class="${dc(r.t_digit)}">${r.t_digit??'—'}</span></td>
+<td class="gsep"><span class="gears">${dot(r.mom_d5,false)}${dot(r.mom_d10,false)}${dot(r.trend_d5,false)}</span></td>
+<td class="gend"><span class="${dc(r.a_digit)}">${r.a_digit??'—'}</span></td>
+<td class="gsep hm"><span class="${VC[r.vol_regime]||'cw'}">${VL[r.vol_regime]||r.vol_regime||'—'}</span></td>
+<td class="hm gend"><span class="${dc(r.v_digit)}">${r.v_digit??'—'}</span></td>
+<td class="gsep hm"><span style="color:${pzAbs>1.5?'#ff1744':pzAbs>=0.85?'#ff1744':'#fff'}">${num(r.price_d5_z,2)}</span></td>
+<td class="hm"><span style="color:${(parseFloat(r.range_pos_20d)||0)>0.9?'#ff1744':(parseFloat(r.range_pos_20d)||0)>0.75?'#ff1744':'#fff'}">${r.range_pos_20d!=null?parseFloat(r.range_pos_20d).toFixed(2):'—'}</span></td>
+<td class="hm">${pct(r.perf_1d)}</td>
+<td class="hm gend">${pct(r.perf_5d)}</td>
+<td class="gsep hm"><span class="cw">${rnk}</span></td>
+<td class="hm">${rmv(r.rank_move)}</td>
+</tr>`;
+  }).join('');
+}
+
+load();
+setInterval(load,3*60*1000);
+</script>
+</body>
+</html>
