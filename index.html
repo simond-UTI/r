@@ -1,129 +1,5 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>2H</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap');
-html,body{height:100%;margin:0;padding:0;background:#13151a;font-family:'Roboto Mono',monospace;font-size:12px;line-height:1;color:#fff;overflow-x:hidden}
-*{box-sizing:border-box}
-
-.top{display:flex;align-items:center;gap:24px;padding:10px 16px}
-.logo{font-size:14px;font-weight:600;color:#fff;white-space:nowrap}
-.ts{font-size:12px;color:#fff}
-select{background:transparent;border:none;outline:none;font-family:'Roboto Mono',monospace;font-size:12px;color:#fff;cursor:pointer;-webkit-appearance:none}
-select option{background:#13151a;color:#fff}
-.sr{margin-left:auto}
-.sr input{background:transparent;border:none;outline:none;border-bottom:1px solid rgba(255,255,255,0.25);font-family:'Roboto Mono',monospace;font-size:12px;color:#fff;width:160px;padding:2px 0}
-.sr input::placeholder{color:rgba(255,255,255,0.4)}
-.sr input:focus{border-bottom-color:#fff}
-
-.sb{display:flex;gap:0;padding:4px 16px;border-bottom:1px solid rgba(255,255,255,0.12)}
-/* stats bar — full white always, only underline distinguishes active */
-.sp{font-size:11px;color:#fff;cursor:pointer;padding:3px 20px 3px 0;border-bottom:2px solid transparent;white-space:nowrap}
-.sp:hover{opacity:0.7}
-.sp.on{border-bottom-color:#fff}
-.sp.ghc{color:#00e676!important;border-bottom-color:#00e676}
-.sp.gxt{color:#ff1744!important;border-bottom-color:#ff1744}
-.sp.gmo{border-bottom-color:#fff}
-
-.wrap{overflow-x:auto;overflow-y:auto;height:calc(100vh - 64px);-webkit-overflow-scrolling:touch}
-table{border-collapse:collapse;width:max-content}
-thead{position:sticky;top:0;background:#13151a;z-index:10}
-
-table{border-collapse:separate;border-spacing:0;width:max-content}
-thead{position:sticky;top:0;background:#13151a;z-index:10}
-
-/* group header track */
-tr.gh>th{
-  font-size:11px;font-weight:600;color:#fff!important;
-  letter-spacing:0.12em;text-transform:uppercase;
-  padding:5px 12px 5px 0;text-align:left;
-  background:#13151a;cursor:default;white-space:nowrap;
-  border:none
-}
-tr.gh>th.blank{padding:0}
-tr.gh>th:first-child{padding-left:16px}
-tr.gh>th.gend{padding-right:32px!important}
-
-/* group gaps — pure padding, no borders, no squashing */
-td.gsep{padding-left:24px!important}
-tr.ch>th.gsep{padding-left:24px!important}
-tr.gh>th.gsep{padding-left:24px!important}
-/* wider gap between Identity and Signal groups */
-td.gsep-lg{padding-left:36px!important}
-tr.ch>th.gsep-lg{padding-left:36px!important}
-tr.gh>th.gsep-lg{padding-left:36px!important}
-
-/* col headers */
-tr.ch>th{
-  font-size:12px;font-weight:600;color:#fff!important;
-  padding:4px 12px 5px 0;text-align:left!important;
-  background:#13151a;border-bottom:1px solid rgba(255,255,255,0.15);
-  cursor:pointer;white-space:nowrap;user-select:none
-}
-tr.ch>th:first-child{padding-left:16px}
-tr.ch>th:hover{color:#00e676!important}
-tr.ch>th.s{color:#00e676!important}
-tr.ch>th.gend{padding-right:32px!important}
-
-/* data cells */
-td{
-  padding:0 12px 0 0;height:26px;
-  border:none;vertical-align:middle;
-  white-space:nowrap;text-align:left;
-  font-size:12px;color:#fff!important
-}
-td.r{text-align:right}
-td:first-child{padding-left:16px}
-td.gend{padding-right:32px!important}
-tr:hover>td{background:rgba(255,255,255,0.04)}
-
-tr.rhc>td:first-child{border-left:2px solid #00e676}
-tr.rxt>td:first-child{border-left:2px solid #ff1744}
-tr.rmo>td:first-child{border-left:2px solid transparent}
-tr.rbl>td:first-child{border-left:2px solid transparent}
-
-.cg{color:#00e676!important}
-.cr{color:#ff1744!important}
-.cw{color:#fff!important}
-.cdim{color:rgba(255,255,255,0.2)!important}
-
-.bold{font-weight:600}
-.desc-col{max-width:140px;overflow:hidden;text-overflow:ellipsis;display:block;white-space:nowrap}
-
-.gears{display:inline-flex;gap:5px;align-items:center}
-.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}
-.don{background:#00e676}.dof{background:#ff1744}.dnu{background:rgba(255,255,255,0.15)}
-
-.ru{color:#00e676!important}.rd{color:#ff1744!important}
-
-@media(max-width:700px){.hm{display:table-cell}}
-.msg{padding:40px 16px;color:rgba(255,255,255,0.25);font-size:12px}
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:#13151a}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}
-
-/* tooltips */
-.tip{position:relative;cursor:help}
-.tip::after{
-  content:attr(data-tip);
-  position:absolute;top:calc(100% + 6px);left:0;
-  background:#0d0f13;border:1px solid rgba(255,255,255,0.2);
-  color:#fff;font-size:11px;font-weight:400;line-height:1.6;
-  padding:8px 10px;border-radius:4px;
-  width:260px;white-space:pre-line;
-  z-index:100;pointer-events:none;
-  opacity:0;transition:opacity 0.15s;
-  font-family:'Roboto Mono',monospace;
-  letter-spacing:0
-}
-.tip:hover::after{opacity:1}
-</style>
-</head>
-<body>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>2H</title><style>@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600&display=swap');html,body{height:100%;margin:0;padding:0;background:#13151a;font-family:'Roboto Mono',monospace;font-size:12px;line-height:1;color:#fff;overflow-x:hidden}*{box-sizing:border-box}.top{display:flex;align-items:center;gap:24px;padding:10px 16px}.logo{font-size:14px;font-weight:600;color:#fff;white-space:nowrap}.ts{font-size:12px;color:#fff}select{background:transparent;border:none;outline:none;font-family:'Roboto Mono',monospace;font-size:12px;color:#fff;cursor:pointer;-webkit-appearance:none}select option{background:#13151a;color:#fff}.sr{margin-left:auto}.sr input{background:transparent;border:none;outline:none;border-bottom:1px solid rgba(255,255,255,0.25);font-family:'Roboto Mono',monospace;font-size:12px;color:#fff;width:160px;padding:2px 0}.sr input::placeholder{color:rgba(255,255,255,0.4)}.sr input:focus{border-bottom-color:#fff}.sb{display:flex;gap:0;padding:4px 16px;border-bottom:1px solid rgba(255,255,255,0.12)}.sp{font-size:11px;color:#fff;cursor:pointer;padding:3px 20px 3px 0;border-bottom:2px solid transparent;white-space:nowrap}.sp:hover{opacity:0.7}.sp.on{border-bottom-color:#fff}.sp.ghc{color:#00e676!important;border-bottom-color:#00e676}.sp.gxt{color:#ff1744!important;border-bottom-color:#ff1744}.sp.gmo{border-bottom-color:#fff}.wrap{overflow-x:auto;overflow-y:auto;height:calc(100vh - 64px);-webkit-overflow-scrolling:touch}table{border-collapse:separate;border-spacing:0;width:max-content}thead{position:sticky;top:0;background:#13151a;z-index:10}tr.gh>th{font-size:11px;font-weight:600;color:#fff!important;letter-spacing:0.12em;text-transform:uppercase;padding:5px 12px 5px 0;text-align:left;background:#13151a;cursor:default;white-space:nowrap;border:none}tr.gh>th.blank{padding:0}tr.gh>th:first-child{padding-left:16px}tr.gh>th.gend{padding-right:32px!important}td.gsep{padding-left:24px!important}tr.ch>th.gsep{padding-left:24px!important}tr.gh>th.gsep{padding-left:24px!important}td.gsep-lg{padding-left:36px!important}tr.ch>th.gsep-lg{padding-left:36px!important}tr.gh>th.gsep-lg{padding-left:36px!important}tr.ch>th{font-size:12px;font-weight:600;color:#fff!important;padding:4px 12px 5px 0;text-align:left!important;background:#13151a;border-bottom:1px solid rgba(255,255,255,0.15);cursor:pointer;white-space:nowrap;user-select:none}tr.ch>th:first-child{padding-left:16px}tr.ch>th:hover{color:#00e676!important}tr.ch>th.s{color:#00e676!important}tr.ch>th.gend{padding-right:32px!important}td{padding:0 12px 0 0;height:26px;border:none;vertical-align:middle;white-space:nowrap;text-align:left;font-size:12px;color:#fff!important}td:first-child{padding-left:16px}td.gend{padding-right:32px!important}tr:hover>td{background:rgba(255,255,255,0.04)}tr.rhc>td:first-child{border-left:2px solid #00e676}tr.rxt>td:first-child{border-left:2px solid #ff1744}tr.rmo>td:first-child{border-left:2px solid transparent}tr.rbl>td:first-child{border-left:2px solid transparent}.cg{color:#00e676!important}.cr{color:#ff1744!important}.cw{color:#fff!important}.cdim{color:rgba(255,255,255,0.2)!important}.gears{display:inline-flex;gap:5px;align-items:center}.dot{width:7px;height:7px;border-radius:50%;display:inline-block;flex-shrink:0}.don{background:#00e676}.dof{background:#ff1744}.dnu{background:rgba(255,255,255,0.15)}.msg{padding:40px 16px;color:rgba(255,255,255,0.25);font-size:12px}::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-track{background:#13151a}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px}.tip{position:relative;cursor:help}.tip::after{content:attr(data-tip);position:absolute;top:calc(100% + 6px);left:0;background:#0d0f13;border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:11px;font-weight:400;line-height:1.6;padding:8px 10px;border-radius:4px;width:260px;white-space:pre-line;z-index:100;pointer-events:none;opacity:0;transition:opacity 0.15s;font-family:'Roboto Mono',monospace;letter-spacing:0}.tip:hover::after{opacity:1}</style></head><body>
 
 <div class="top">
   <span class="logo">2H</span>
@@ -143,18 +19,19 @@ tr.rbl>td:first-child{border-left:2px solid transparent}
 </div>
 
 <div class="sb">
-  <div class="sp on"  id="sp-all"      onclick="setSig('ALL')">ALL —</div>
-  <div class="sp"     id="sp-hc"       onclick="setSig('HIGH CONVICTION')">CONVICTION —</div>
-  <div class="sp"     id="sp-mon"      onclick="setSig('MONITOR')">MONITOR —</div>
-  <div class="sp"     id="sp-ext"      onclick="setSig('EXTENDED')">EXTENDED —</div>
-  <div class="sp"     id="sp-exit"     onclick="setSig('EXIT')">EXIT —</div>
-  <div class="sp"     id="sp-blk"      onclick="setSig('BLOCK')">BLOCK —</div>
-  <div class="sp"     id="sp-dip"      onclick="setSig('DIP BUYS')" style="color:#00e676">DIP BUYS —</div>
-  <div class="sp"     id="sp-watch"    onclick="setSig('WATCH')" style="color:#ff1744">WATCH —</div>
+  <div class="sp on" id="sp-all"    onclick="setSig('ALL')">ALL —</div>
+  <div class="sp"    id="sp-hc"     onclick="setSig('HIGH CONVICTION')">CONVICTION —</div>
+  <div class="sp"    id="sp-mon"    onclick="setSig('MONITOR')">MONITOR —</div>
+  <div class="sp"    id="sp-ext"    onclick="setSig('EXTENDED')">EXTENDED —</div>
+  <div class="sp"    id="sp-exit"   onclick="setSig('EXIT')">EXIT —</div>
+  <div class="sp"    id="sp-blk"    onclick="setSig('BLOCK')">BLOCK —</div>
+  <div class="sp tip" id="sp-tac"   onclick="setSig('TACTICAL')" style="color:#00e676"
+       data-tip="Precision entry windows for high-integrity assets.&#10;Filter by CONVICTION to isolate Ignition + Dip (P=0)&#10;or Cooling setups where structural trend and momentum&#10;have re-aligned.">TACTICAL —</div>
+  <div class="sp tip" id="sp-decay" onclick="setSig('DECAY')" style="color:#ff1744"
+       data-tip="Assets in active structural or momentum decline.&#10;Monitors EXIT signals, TREND FADES, and BLOCKS.&#10;Filter by EXIT to identify immediate liquidation requirements.">DECAY —</div>
 </div>
 
-<div class="wrap">
-<table>
+<div class="wrap"><table>
   <thead>
     <tr class="gh">
       <th class="blank" colspan="2"></th>
@@ -168,69 +45,84 @@ tr.rbl>td:first-child{border-left:2px solid transparent}
     <tr class="ch">
       <th style="min-width:70px;padding-left:16px" onclick="sb('symbol')">Ticker</th>
       <th class="hm" style="min-width:80px;max-width:100px" onclick="sb('group_name')">Group</th>
-      <th class="gsep-lg tip" style="min-width:48px" onclick="sb('regime_id')" data-tip="4-digit physics code&#10;Volatility × Trend × Velocity × Price&#10;&#10;· V digit: 0=Compressed, 1=Normal, 2=Expanded&#10;· T digit: 0=Bear(≤8), 1=Bull(8-80), 2=Monster(>80)&#10;· A digit: 0=Cascade broken, 1=Pausing, 2=Aligned, 3=Ignition&#10;· P digit: 0=Price falling, 1=Normal, 2=Extended&#10;&#10;e.g. 2221 = Expanded / Monster / Aligned / Normal">DNA</th>
-      <th class="tip" style="min-width:80px" onclick="sb('regime_signal')" data-tip="Regime signal — derived from DNA code&#10;&#10;· HIGH CONVICTION: vol normal/expanded + trend>8 + qualifying DNA&#10;· MONITOR: trend positive but physics partial&#10;· EXTENDED: price_z>1.5 (momentum continuation)&#10;· EXIT: M5−/M10− cascade broken&#10;· BLOCK: trend≤8 or vol compressed">Signal</th>
-      <th class="gend tip" style="min-width:90px" onclick="sb('entry_timing')" data-tip="Timing state — derived from M5/M10/trend_d5/trend_d10/Price Z/R20&#10;&#10;🟢 CONFIRMED: all gears+, price normal&#10;🟢 COOLING: M5−/M10+/trend>80/M5≤−5&#10;🟢 IGNITION: M5+/M10−/trend_d5+&#10;⬜ TREND HOLD: M5 barely−/R20>0.85&#10;⬜ PAUSE: M5−/M10+/trend_d10≤50/price_z<0.2&#10;⬜ TREND FADE: M5+/M10+/trend_d5−&#10;⬜ WAIT: M5−/M10+/price_z≥0.85&#10;🔴 EXT RISK: price_z≥0.7+(price_z≥0.85 or R20>0.75)&#10;🔴 EXTENDED: price_z>1.25&#10;🔴 WEAK DIP: M5−/M10+/trend_d5<−3&#10;🔴 DEAD CAT: M5+/M10−/trend_d5−&#10;🔴 EXIT: M5−/M10−">Timing</th>
-      <th class="hm tip" style="min-width:80px" data-tip="EOD (daily close) timing signal&#10;Compare to Live Timing:&#10;&#10;· Both agree = trust the signal&#10;· Live=danger, EOD=good = noise, wait for next bar&#10;· Both=danger = act immediately">EOD</th>
-      <th class="gsep hm tip" style="min-width:50px" onclick="sb('trend')" data-tip="Trend score −100 to +100&#10;Composite of 12 methods (HMA, LR, ZL-EMA etc)&#10;&#10;· Above 8 = Bull trend&#10;· Below −8 = Bear trend&#10;· −8 to +8 = Neutral&#10;· Above 80 = Monster trend&#10;· Below 8 blocks all entries">Trend</th>
-      <th class="hm tip" style="min-width:50px" onclick="sb('momentum')" data-tip="Momentum score −100 to +100&#10;Same 12-method composite as Trend&#10;but using 21-bar lookback vs 63-bar&#10;&#10;· Above 8 = positive momentum&#10;· Below −8 = negative momentum&#10;· Measures rate of change, not level">Trade</th>
-      <th class="hm gend tip" style="min-width:24px" onclick="sb('t_digit')" data-tip="Trend digit (T in DNA code)&#10;&#10;· 0 = Bear (trend ≤8)&#10;· 1 = Bull (trend 8–80)&#10;· 2 = Monster (trend >80)">T</th>
-      <th class="gsep tip" style="min-width:56px" onclick="sb('mom_d5')" data-tip="Three-gear physics system&#10;&#10;· Dot 1 (Fast): M5 — 5-day momentum change&#10;· Dot 2 (Medium): M10 — 10-day momentum change&#10;· Dot 3 (Structural): trend_d5 — 5-day trend change&#10;&#10;Green = positive. Red = negative&#10;All green = Full Throttle&#10;Dot 3 red = structure weakening">Gears</th>
-      <th class="gend tip" style="min-width:24px" onclick="sb('a_digit')" data-tip="Velocity/gear state (A in DNA code)&#10;&#10;· 0 = Cascade broken (M5−/M10−)&#10;· 1 = Pausing (M5−/M10+)&#10;· 2 = Aligned (M5+/M10+)&#10;· 3 = Ignition (M5+/M10−/trend_d5+)">A</th>
-      <th class="gsep hm tip" style="min-width:76px" onclick="sb('vol_regime')" data-tip="ATR-based volatility regime&#10;&#10;· Compressed (V=0): blocks all entries&#10;· Normal (V=1): standard trending conditions&#10;· Expanded (V=2): high volatility, strong trends">Regime</th>
-      <th class="hm gend tip" style="min-width:24px" onclick="sb('v_digit')" data-tip="Volatility digit (V in DNA code)&#10;&#10;· 0 = Compressed (blocked)&#10;· 1 = Normal&#10;· 2 = Expanded (trending conditions)">V</th>
-      <th class="gsep hm tip" style="min-width:52px" onclick="sb('price_d5_z')" data-tip="Price Z-score vs 5-day mean&#10;Measures short-term price stretch&#10;&#10;· Below 0.7 = breakout bypass (stays Confirmed)&#10;· 0.7–0.85 = approaching caution zone&#10;· Above 0.85 = Ext Risk trigger (with R20)&#10;· Above 1.25 = Extended hard block">Price Z</th>
-      <th class="hm tip" style="min-width:44px" onclick="sb('range_pos_20d')" data-tip="Position within 20-day high/low range&#10;0 = at 20-day low, 1 = at 20-day high&#10;&#10;· Above 0.75 = Ext Risk trigger (with price_z)&#10;· Above 0.98 = Extended trigger (with price_z>0.85)&#10;Catches medium-term extension that Price Z misses">R20</th>
+      <th class="gsep-lg tip" style="min-width:48px" onclick="sb('regime_id')"
+          data-tip="4-digit physics code&#10;V × T × A × P&#10;&#10;V: 0=Compressed 1=Normal 2=Expanded&#10;T: 0=Bear(≤8) 1=Bull(8-80) 2=Monster(>80)&#10;A: 0=Broken/DeadCat 1=Pausing 2=Aligned 3=Ignition&#10;P: 0=Falling 1=Normal 2=Extended&#10;&#10;e.g. 2221 = Expanded/Monster/Aligned/Normal">DNA</th>
+      <th class="tip" style="min-width:80px" onclick="sb('regime_signal')"
+          data-tip="Regime signal&#10;&#10;HIGH CONVICTION: vol normal/exp + trend>8 + qualifying DNA&#10;MONITOR: trend positive, physics partial&#10;EXTENDED: price_z>1.5&#10;EXIT: M5−/M10− cascade broken&#10;BLOCK: trend≤8 or vol compressed">Signal</th>
+      <th class="gend tip" style="min-width:90px" onclick="sb('entry_timing')"
+          data-tip="Timing state&#10;&#10;🟢 CONFIRMED: all gears+, price normal&#10;🟢 COOLING: M5−/M10+/trend>80/M5≤−5&#10;🟢 IGNITION: M5+/M10−/trend_d5+/trend>8&#10;⬜ TREND HOLD: M5 barely−/R20>0.85&#10;⬜ PAUSE: M5−/M10+/trend_d10≤50/price_z<0.2&#10;⬜ TREND FADE: M5+/M10+/trend_d5−&#10;⬜ WAIT: M5−/M10+/price_z≥0.85&#10;🔴 EXT RISK: price_z≥0.7+(price_z≥0.85 or R20>0.75)&#10;🔴 EXTENDED: price_z>1.25&#10;🔴 WEAK DIP: M5−/M10+/trend_d5<−3&#10;🔴 DEAD CAT: M5+/M10−/trend_d5−&#10;🔴 EXIT: M5−/M10−&#10;⬛ BLOCK: trend≤8 or vol COMP">Timing</th>
+      <th class="hm tip" style="min-width:80px"
+          data-tip="EOD timing signal&#10;&#10;Both agree = trust&#10;Live=danger EOD=good = noise, wait&#10;Both=danger = act immediately">EOD</th>
+      <th class="gsep hm tip" style="min-width:50px" onclick="sb('trend')"
+          data-tip="Trend score −100 to +100&#10;&#10;>8 = Bull  <−8 = Bear  >80 = Monster&#10;Below 8 blocks all entries">Trend</th>
+      <th class="hm tip" style="min-width:50px" onclick="sb('momentum')"
+          data-tip="Momentum score −100 to +100&#10;21-bar composite (vs 63-bar for Trend)&#10;&#10;>8 = positive  <−8 = negative">Trade</th>
+      <th class="hm gend tip" style="min-width:24px" onclick="sb('t_digit')"
+          data-tip="T digit&#10;0=Bear(≤8) 1=Bull(8-80) 2=Monster(>80)">T</th>
+      <th class="gsep tip" style="min-width:56px" onclick="sb('mom_d5')"
+          data-tip="Three-gear system&#10;&#10;Dot 1 (Fast):       M5  — 5d momentum change&#10;Dot 2 (Medium):     M10 — 10d momentum change&#10;Dot 3 (Structural): T5  — 5d trend change&#10;&#10;Green=positive  Red=negative&#10;All green = Full Throttle">Gears</th>
+      <th class="gend tip" style="min-width:24px" onclick="sb('a_digit')"
+          data-tip="A digit (velocity state)&#10;&#10;0 = Broken/Dead Cat&#10;1 = Pausing (M5−/M10+)&#10;2 = Aligned (M5+/M10+)&#10;3 = Ignition (M5+/M10−/T5+/trend>8)">A</th>
+      <th class="gsep hm tip" style="min-width:76px" onclick="sb('vol_regime')"
+          data-tip="ATR volatility regime&#10;&#10;Compressed (V=0): blocks all entries&#10;Normal (V=1): standard conditions&#10;Expanded (V=2): high vol, strong trends">Regime</th>
+      <th class="hm gend tip" style="min-width:24px" onclick="sb('v_digit')"
+          data-tip="V digit&#10;0=Compressed 1=Normal 2=Expanded">V</th>
+      <th class="gsep hm tip" style="min-width:52px" onclick="sb('price_d5_z')"
+          data-tip="Price Z-score (5d return vs 60d history)&#10;&#10;<0.7 = normal&#10;0.7-0.85 = caution zone&#10;>0.85 = Ext Risk (with R20)&#10;>1.25 = Extended hard block">Price Z</th>
+      <th class="hm tip" style="min-width:44px" onclick="sb('range_pos_20d')"
+          data-tip="20-day range position&#10;0=20d low  1=20d high&#10;&#10;>0.75 = Ext Risk (with price_z)&#10;>0.98 = Extended (with price_z>0.85)">R20</th>
       <th class="hm" style="min-width:54px" onclick="sb('perf_1d')">1D%</th>
       <th class="hm gend" style="min-width:54px" onclick="sb('perf_5d')">5D%</th>
-      <th class="gsep hm tip" style="min-width:40px" onclick="sb('rank')" data-tip="Raw strength rank — 50% trend + 50% momentum&#10;Rank 1 = strongest ticker in universe&#10;&#10;Independent of signal quality or timing state&#10;Use alongside Q Rank to spot divergence:&#10;· High Rank + low Q Rank = strong but bad signal&#10;· Low Rank + high Q Rank = weaker but better setup">Rank</th>
-      <th class="hm tip" style="min-width:44px" onclick="sb('rank_move')" data-tip="Raw rank movement since last session&#10;Formula: previous_rank − current_rank&#10;&#10;· Positive (+) = gaining strength in universe&#10;· Negative (−) = losing relative position&#10;&#10;Does not reflect signal quality changes&#10;Use Div to see opportunity vs strength gap">R Mv</th>
-      <th class="hm tip" style="min-width:40px" onclick="sb('q_rank')" data-tip="Quality Rank — combines regime tier, timing state&#10;and raw rank into a single opportunity score&#10;&#10;· Regime tier first (HC beats Monitor)&#10;· Timing tier second (Cooling/Ignition beat Pause)&#10;· Raw rank as tiebreaker&#10;&#10;Q Rank 1 = best setup in universe right now&#10;Compare to Rank: Rank 5 + Q Rank 2 = superbike&#10;with green light. Rank 35 + Q Rank 1 = great signal&#10;on a weaker stock — size accordingly">Q Rk</th>
-      <th class="hm tip" style="min-width:40px" onclick="sb('div')" data-tip="Divergence = Rank minus Q Rank&#10;&#10;· Positive = quality better than raw strength&#10;  (good signal on weaker stock — opportunity)&#10;· Negative = raw strength better than quality&#10;  (strong stock, poor timing — wait)&#10;&#10;🟢 Green zone: −20 to +80 (tradeable)&#10;🔴 Red zone: &gt;+80 quality trap (weak stock)&#10;🔴 Red zone: &lt;−20 structural laggard&#10;&#10;Conviction filter excludes red zone tickers">Div</th>
+      <th class="gsep hm tip" style="min-width:40px" onclick="sb('rank')"
+          data-tip="Raw strength rank&#10;50% trend + 50% momentum&#10;Rank 1 = strongest in universe">Rank</th>
+      <th class="hm tip" style="min-width:44px" onclick="sb('rank_move')"
+          data-tip="Rank movement vs last session&#10;+ = gaining  − = losing position">R Mv</th>
+      <th class="hm tip" style="min-width:40px" onclick="sb('q_rank')"
+          data-tip="Quality Rank&#10;Regime tier → Timing tier → Raw rank&#10;&#10;Q Rank 1 = best setup right now">Q Rk</th>
+      <th class="hm tip" style="min-width:40px" onclick="sb('div')"
+          data-tip="Divergence = Rank − Q Rank&#10;&#10;+ = quality better than raw strength&#10;− = raw strength better than quality&#10;&#10;Green zone: −20 to +80&#10;Red: >+80 quality trap  <−20 laggard">Div</th>
     </tr>
   </thead>
   <tbody id="tb"><tr><td colspan="21" class="msg">Loading…</td></tr></tbody>
-</table>
-</div>
+</table></div>
 
 <script>
 const SURL='https://pzskvslhfaituzyukasl.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6c2t2c2xoZmFpdHV6eXVrYXNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNzQyNTAsImV4cCI6MjA3OTY1MDI1MH0.FEZTIIQ4zgdb7uswf70XZI9Ph6ykSeDkfxooIcRIOMw';
 const H={'apikey':KEY,'Authorization':'Bearer '+KEY};
 const COLS='symbol,name,group_name,watchlist,trend,momentum,mom_d5,mom_d10,trend_d5,price_d5_z,range_pos_20d,perf_1d,perf_5d,rank,rank_move,vol_regime,v_digit,t_digit,a_digit,p_digit,regime_id,regime_signal,entry_timing,q_rank,div';
+
 let all=[],eodMap={},filt=[],sc='q_rank',sd=1,sig='ALL',src='intraday',wl='UK ETFS',grp='';
+
 const TIER={'HIGH CONVICTION':1,'MONITOR':2,'EXTENDED':3,'EXIT':4,'BLOCK':5};
-const TIMING_TIER={'COOLING':1,'IGNITION':2,'CONFIRMED':3,'TREND HOLD':4,'DIP ENTRY':5,'EXT RISK':6,'EXTENDED':7,'TREND FADE':8,'WEAK DIP':9,'DEAD CAT':10,'WAIT':11,'EXIT':12};
+const TIMING_TIER={'BLOCK':0,'COOLING':1,'IGNITION':2,'CONFIRMED':3,'TREND HOLD':4,'DIP ENTRY':5,'EXT RISK':6,'EXTENDED':7,'TREND FADE':8,'WEAK DIP':9,'DEAD CAT':10,'WAIT':11,'EXIT':12};
 const tsort=r=>(TIER[r.regime_signal]||6)*100000+(TIMING_TIER[r.entry_timing]||5)*1000+(r.rank&&r.rank<900?r.rank:9999);
-const lastFetch=()=>new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
 async function load(){
   const v=src==='intraday'?'r_universe_live':'r_universe';
   try{
-    // Always fetch both live and EOD in parallel
-    const [res, eodRes] = await Promise.all([
+    const[res,eodRes]=await Promise.all([
       fetch(`${SURL}/rest/v1/${v}?select=${COLS}&limit=300`,{headers:H}),
       fetch(`${SURL}/rest/v1/r_universe?select=symbol,entry_timing,regime_signal&limit=300`,{headers:H})
     ]);
     if(!res.ok)throw new Error(res.status);
     all=await res.json();
-    // Build EOD lookup map
     if(eodRes.ok){
-      const eodData=await eodRes.json();
+      const d=await eodRes.json();
       eodMap={};
-      eodData.forEach(r=>{eodMap[r.symbol]={timing:r.entry_timing,signal:r.regime_signal};});
+      d.forEach(r=>{eodMap[r.symbol]={timing:r.entry_timing,signal:r.regime_signal};});
     }
-    // Show data freshness timestamp from Supabase
-    const tsEl = document.getElementById('ts');
-    if(tsEl && all.length){
-      if(src==='intraday' && all[0].updated_at){
-        tsEl.textContent = new Date(all[0].updated_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
-      } else if(src==='eod' && all[0].bar_date){
-        tsEl.textContent = all[0].bar_date;
-      }
+    const tsEl=document.getElementById('ts');
+    if(tsEl&&all.length){
+      if(src==='intraday'&&all[0].updated_at)
+        tsEl.textContent=new Date(all[0].updated_at).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+      else if(all[0].bar_date)
+        tsEl.textContent=all[0].bar_date;
     }
     buildGroups();counts();af();
-  }catch(e){document.getElementById('tb').innerHTML=`<tr><td colspan="21" class="msg">Error — ${e.message}</td></tr>`;}
+  }catch(e){
+    document.getElementById('tb').innerHTML=`<tr><td colspan="21" class="msg">Error — ${e.message}</td></tr>`;
+  }
 }
 
 function setSrc(s){src=s;load();}
@@ -258,45 +150,60 @@ function counts(){
   const b=base();
   const c={'HIGH CONVICTION':0,'MONITOR':0,'EXTENDED':0,'EXIT':0,'BLOCK':0};
   b.forEach(r=>{if(c[r.regime_signal]!=null)c[r.regime_signal]++;});
-  const dipBuys=b.filter(r=>
+  const tactical=b.filter(r=>
     r.regime_signal==='HIGH CONVICTION'&&
     ['CONFIRMED','PAUSE','COOLING','IGNITION','TREND HOLD'].includes(r.entry_timing)&&
     r.div!=null&&r.div>=-20&&r.div<=80
   ).length;
-  const watch=b.filter(r=>
+  const decay=b.filter(r=>
     r.div!=null&&r.div<-35&&r.rank_move!=null&&r.rank_move<0
   ).length;
-  [['all',b.length,'ALL'],['hc',c['HIGH CONVICTION'],'CONVICTION'],
-   ['mon',c['MONITOR'],'MONITOR'],['ext',c['EXTENDED'],'EXTENDED'],
-   ['exit',c['EXIT'],'EXIT'],['blk',c['BLOCK'],'BLOCK'],
-   ['dip',dipBuys,'DIP BUYS'],['watch',watch,'WATCH']]
-  .forEach(([id,n,l])=>document.getElementById('sp-'+id).textContent=l+' '+n);
+  [
+    ['sp-all',   b.length,             'ALL'],
+    ['sp-hc',    c['HIGH CONVICTION'], 'CONVICTION'],
+    ['sp-mon',   c['MONITOR'],         'MONITOR'],
+    ['sp-ext',   c['EXTENDED'],        'EXTENDED'],
+    ['sp-exit',  c['EXIT'],            'EXIT'],
+    ['sp-blk',   c['BLOCK'],           'BLOCK'],
+    ['sp-tac',   tactical,             'TACTICAL'],
+    ['sp-decay', decay,                'DECAY']
+  ].forEach(([id,n,l])=>{const el=document.getElementById(id);if(el)el.textContent=l+' '+n;});
 }
 
-const SM={'ALL':['all','on'],'HIGH CONVICTION':['hc','ghc'],'MONITOR':['mon','gmo'],
-  'EXTENDED':['ext','gxt'],'EXIT':['exit','gxt'],'BLOCK':['blk','on'],
-  'DIP BUYS':['dip','ghc'],'WATCH':['watch','gxt']};
+// Signal → element ID
+const SIG_ID={'ALL':'sp-all','HIGH CONVICTION':'sp-hc','MONITOR':'sp-mon','EXTENDED':'sp-ext','EXIT':'sp-exit','BLOCK':'sp-blk','TACTICAL':'sp-tac','DECAY':'sp-decay'};
+// Active class per signal
+const SIG_CLS={'ALL':'on','HIGH CONVICTION':'on ghc','MONITOR':'on gmo','EXTENDED':'on gxt','EXIT':'on gxt','BLOCK':'on','TACTICAL':'on ghc','DECAY':'on gxt'};
+// Preserve tip class for tooltip buttons
+const HAS_TIP=new Set(['sp-tac','sp-decay']);
 
 function setSig(v){
   sig=v;
-  Object.keys(SM).forEach(k=>document.getElementById('sp-'+SM[k][0]).className='sp');
-  const[id,cl]=SM[v]||['all','on'];
-  document.getElementById('sp-'+id).className='sp on '+cl;
+  // Reset all tabs
+  Object.values(SIG_ID).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.className='sp'+(HAS_TIP.has(id)?' tip':'');
+  });
+  // Activate selected
+  const id=SIG_ID[v];
+  if(id){
+    const el=document.getElementById(id);
+    if(el)el.className='sp '+(SIG_CLS[v]||'on')+(HAS_TIP.has(id)?' tip':'');
+  }
   af();
 }
 
 function af(){
   const s=document.getElementById('sr').value.toLowerCase();
   filt=base().filter(r=>{
-    // Smart tab filters
-    if(sig==='DIP BUYS'){
+    if(sig==='TACTICAL'){
       if(r.regime_signal!=='HIGH CONVICTION')return false;
       if(!['CONFIRMED','PAUSE','COOLING','IGNITION','TREND HOLD'].includes(r.entry_timing))return false;
       if(r.div==null||r.div<-20||r.div>80)return false;
-    } else if(sig==='WATCH'){
+    }else if(sig==='DECAY'){
       if(r.div==null||r.div>=-35)return false;
       if(r.rank_move==null||r.rank_move>=0)return false;
-    } else if(sig!=='ALL'){
+    }else if(sig!=='ALL'){
       if(r.regime_signal!==sig)return false;
     }
     if(s&&!(r.symbol||'').toLowerCase().includes(s)&&!(r.name||'').toLowerCase().includes(s)&&!(r.group_name||'').toLowerCase().includes(s))return false;
@@ -306,7 +213,7 @@ function af(){
 }
 
 function sb(c){
-  if(sc===c)sd*=-1;else{sc=c;sd=c==='_tier'?1:-1;}
+  if(sc===c)sd*=-1;else{sc=c;sd=-1;}
   document.querySelectorAll('tr.ch th').forEach(t=>t.classList.remove('s'));
   event?.target?.classList.add('s');
   sort();render();
@@ -323,30 +230,21 @@ function sort(){
   });
 }
 
-// Price Z: >1.5 or <-1.5 = red, -0.5 to +0.5 = white, else white (no amber)
-const pzCol=v=>{
-  if(v==null||isNaN(v))return'cw';
-  const f=parseFloat(v);
-  return(f>1.5||f<-1.5)?'cr':'cw';
-};
 const mc=v=>{if(v==null||isNaN(v))return'cw';const f=parseFloat(v);return f>8?'cg':f<-8?'cr':'cw';};
-// dc: digit colour — 0=red, 1=white, 2=green, 3=cyan (ignition)
-// digits always white — colour lives in Timing only
-const dc=v=>'cw';
-const dot=(v,ac)=>{
+const dot=v=>{
   if(v==null||isNaN(parseFloat(v)))return'<span class="dot dnu"></span>';
   return`<span class="dot ${parseFloat(v)>=0?'don':'dof'}"></span>`;
 };
-const num=(v,d=1)=>v==null||isNaN(v)?'<span class="cdim">—</span>':parseFloat(v).toFixed(d);
+const num=(v,d=1)=>(v==null||isNaN(v))?'<span class="cdim">—</span>':parseFloat(v).toFixed(d);
 const pct=v=>{
   if(v==null||isNaN(v))return'<span class="cdim">—</span>';
   const f=parseFloat(v);
   return`<span class="${f>0?'cg':f<0?'cr':'cw'}">${f>=0?'+':''}${f.toFixed(2)}%</span>`;
 };
 const rmv=v=>{
-  if(v==null||v===''||v===undefined)return'<span style="color:rgba(255,255,255,0.2)">—</span>';
+  if(v==null||v===''||v===undefined)return'<span class="cdim">—</span>';
   const i=parseInt(v);
-  if(isNaN(i)||i===0)return'<span style="color:rgba(255,255,255,0.2)">—</span>';
+  if(isNaN(i)||i===0)return'<span class="cdim">—</span>';
   return`<span style="color:${i>0?'#00e676':'#ff1744'}">${i>0?'+':''}${i}</span>`;
 };
 
@@ -358,31 +256,25 @@ function pillHtml(sg){
   if(sg==='EXIT')return'<span style="color:#ff1744">Exit</span>';
   if(sg==='HIGH CONVICTION')return'<span style="color:#fff">Conviction</span>';
   if(sg==='MONITOR'||sg==='EXTENDED')return'<span style="color:#fff">Monitor</span>';
-  return'<span style="color:#fff">Block</span>';
+  return'<span style="color:rgba(255,255,255,0.3)">Block</span>';
 }
 
-// 3-colour rule: green=buy signal, white=neutral/wait, red=warning/danger
 const TIMING_STYLE={
-  'CONFIRMED':   'color:#fff',
-  'COOLING':     'color:#00e676',
-  'DIP ENTRY':   'color:#fff',
-  'PAUSE':       'color:#fff',
-  'IGNITION':    'color:#00e676',
-  'TREND HOLD':  'color:#fff',
-  'TREND FADE':  'color:#ff1744',
-  'WEAK DIP':    'color:#ff1744',
-  'EXT RISK':    'color:#ff1744',
-  'EXTENDED':    'color:#ff1744',
-  'DEAD CAT':    'color:#ff1744',
-  'WAIT':        'color:#fff',
-  'EXIT':        'color:#ff1744',
+  'CONFIRMED':'color:#fff','COOLING':'color:#00e676','DIP ENTRY':'color:#fff',
+  'PAUSE':'color:#fff','IGNITION':'color:#00e676','TREND HOLD':'color:#fff',
+  'TREND FADE':'color:#ff1744','WEAK DIP':'color:#ff1744','EXT RISK':'color:#ff1744',
+  'EXTENDED':'color:#ff1744','DEAD CAT':'color:#ff1744','WAIT':'color:#fff',
+  'EXIT':'color:#ff1744','BLOCK':'color:rgba(255,255,255,0.25)',
 };
 const TIMING_LABEL={
   'CONFIRMED':'Confirmed','COOLING':'Cooling','DIP ENTRY':'Pause','PAUSE':'Pause',
   'IGNITION':'Ignition','TREND HOLD':'Trend Hold','TREND FADE':'Trend Fade',
   'WEAK DIP':'Weak Dip','EXT RISK':'Ext Risk','EXTENDED':'Extended',
-  'DEAD CAT':'Dead Cat','WAIT':'Wait','EXIT':'Exit',
+  'DEAD CAT':'Dead Cat','WAIT':'Wait','EXIT':'Exit','BLOCK':'Block',
 };
+
+const DANGER=new Set(['EXIT','DEAD CAT','WEAK DIP','BLOCK']);
+const GOOD=new Set(['CONFIRMED','COOLING','IGNITION','TREND HOLD','PAUSE','DIP ENTRY']);
 
 function render(){
   const tb=document.getElementById('tb');
@@ -390,53 +282,26 @@ function render(){
   tb.innerHTML=filt.map(r=>{
     const sg=r.regime_signal||'MONITOR';
     const dna=String(r.regime_id||0).padStart(4,'0');
-    const dnaHtml=`<span style="color:#fff;font-weight:500">${dna}</span>`;
-    const rnk=r.rank&&r.rank<900?r.rank:'<span class="cdim">—</span>';
     const tim=r.entry_timing||'WAIT';
     const timLbl=TIMING_LABEL[tim]||tim;
     const timSty=TIMING_STYLE[tim]||'color:#fff';
     const pzAbs=Math.abs(parseFloat(r.price_d5_z)||0);
+    const rnk=r.rank&&r.rank<900?r.rank:'<span class="cdim">—</span>';
+    const r20=parseFloat(r.range_pos_20d)||0;
 
-    // EOD signal lookup and conflict detection
     const eod=eodMap[r.symbol];
     const eodTim=eod?eod.timing:'';
     const eodLbl=eodTim?(TIMING_LABEL[eodTim]||eodTim):'—';
-    // Conflict: live is danger signal but EOD is not
-    const dangerStates=['EXIT','DEAD CAT','WEAK DIP'];
-    const goodStates=['CONFIRMED','COOLING','IGNITION','TREND HOLD','PAUSE','DIP ENTRY'];
-    const isConflict=dangerStates.includes(tim)&&goodStates.includes(eodTim);
-    const isAgreed=dangerStates.includes(tim)&&dangerStates.includes(eodTim);
+    const isConflict=DANGER.has(tim)&&GOOD.has(eodTim);
+    const isAgreed=DANGER.has(tim)&&DANGER.has(eodTim);
     const eodStyle=isConflict?'color:#ffaa00':isAgreed?'color:#ff1744':(TIMING_STYLE[eodTim]||'color:#fff');
     const eodHtml=eodTim?`<span style="${eodStyle}">${eodLbl}</span>`:'<span class="cdim">—</span>';
 
-    return`<tr class="${RC[sg]||'rmo'}">
-<td title="${r.name||''}"><span style="color:#fff;font-weight:600">${r.symbol}</span></td>
-<td class="hm"><span style="color:#888;max-width:100px;overflow:hidden;text-overflow:ellipsis;display:block;white-space:nowrap;font-size:11px">${r.group_name||''}</span></td>
-<td class="gsep-lg">${dnaHtml}</td>
-<td>${pillHtml(sg)}</td>
-<td><span style="${timSty}">${timLbl}</span></td>
-<td class="hm gend">${eodHtml}</td>
-<td class="gsep hm"><span class="${mc(r.trend)}">${num(r.trend)}</span></td>
-<td class="hm"><span class="${mc(r.momentum)}">${num(r.momentum)}</span></td>
-<td class="hm gend"><span class="${dc(r.t_digit)}">${r.t_digit??'—'}</span></td>
-<td class="gsep"><span class="gears">${dot(r.mom_d5,false)}${dot(r.mom_d10,false)}${dot(r.trend_d5,false)}</span></td>
-<td class="gend"><span class="${dc(r.a_digit)}">${r.a_digit??'—'}</span></td>
-<td class="gsep hm"><span class="${VC[r.vol_regime]||'cw'}">${VL[r.vol_regime]||r.vol_regime||'—'}</span></td>
-<td class="hm gend"><span class="${dc(r.v_digit)}">${r.v_digit??'—'}</span></td>
-<td class="gsep hm"><span style="color:${pzAbs>1.5?'#ff1744':pzAbs>=0.85?'#ff1744':'#fff'}">${num(r.price_d5_z,2)}</span></td>
-<td class="hm"><span style="color:${(parseFloat(r.range_pos_20d)||0)>0.9?'#ff1744':(parseFloat(r.range_pos_20d)||0)>0.75?'#ff1744':'#fff'}">${r.range_pos_20d!=null?parseFloat(r.range_pos_20d).toFixed(2):'—'}</span></td>
-<td class="hm">${pct(r.perf_1d)}</td>
-<td class="hm gend">${pct(r.perf_5d)}</td>
-<td class="gsep hm"><span class="cw">${rnk}</span></td>
-<td class="hm">${rmv(r.rank_move)}</td>
-<td class="hm"><span style="color:#fff">${r.q_rank||'—'}</span></td>
-<td class="hm"><span style="color:${(r.div>80||r.div<-20)?'#ff1744':'#00e676'}">${r.div!=null?(r.div>0?'+':'')+r.div:'—'}</span></td>
-</tr>`;
+    return`<tr class="${RC[sg]||'rmo'}"><td title="${(r.name||'').replace(/"/g,'&quot;')}"><span style="color:#fff;font-weight:600">${r.symbol}</span></td><td class="hm"><span style="color:#888;max-width:100px;overflow:hidden;text-overflow:ellipsis;display:block;white-space:nowrap;font-size:11px">${r.group_name||''}</span></td><td class="gsep-lg"><span style="color:#fff;font-weight:500">${dna}</span></td><td>${pillHtml(sg)}</td><td><span style="${timSty}">${timLbl}</span></td><td class="hm gend">${eodHtml}</td><td class="gsep hm"><span class="${mc(r.trend)}">${num(r.trend)}</span></td><td class="hm"><span class="${mc(r.momentum)}">${num(r.momentum)}</span></td><td class="hm gend"><span class="cw">${r.t_digit!=null?r.t_digit:'—'}</span></td><td class="gsep"><span class="gears">${dot(r.mom_d5)}${dot(r.mom_d10)}${dot(r.trend_d5)}</span></td><td class="gend"><span class="cw">${r.a_digit!=null?r.a_digit:'—'}</span></td><td class="gsep hm"><span class="${VC[r.vol_regime]||'cw'}">${VL[r.vol_regime]||r.vol_regime||'—'}</span></td><td class="hm gend"><span class="cw">${r.v_digit!=null?r.v_digit:'—'}</span></td><td class="gsep hm"><span style="color:${pzAbs>1.5?'#ff1744':pzAbs>=0.85?'#ff1744':'#fff'}">${num(r.price_d5_z,2)}</span></td><td class="hm"><span style="color:${r20>0.9?'#ff1744':r20>0.75?'#ff1744':'#fff'}">${r.range_pos_20d!=null?r20.toFixed(2):'—'}</span></td><td class="hm">${pct(r.perf_1d)}</td><td class="hm gend">${pct(r.perf_5d)}</td><td class="gsep hm"><span class="cw">${rnk}</span></td><td class="hm">${rmv(r.rank_move)}</td><td class="hm"><span style="color:#fff">${r.q_rank||'—'}</span></td><td class="hm"><span style="color:${(r.div>80||r.div<-20)?'#ff1744':'#00e676'}">${r.div!=null?(r.div>0?'+':'')+r.div:'—'}</span></td></tr>`;
   }).join('');
 }
 
 load();
 setInterval(load,3*60*1000);
 </script>
-</body>
-</html>
+</body></html>
