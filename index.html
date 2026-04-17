@@ -213,7 +213,7 @@ function af(){
 }
 
 function sb(c){
-  if(sc===c)sd*=-1;else{sc=c;sd=-1;}
+  if(sc===c)sd*=-1;else{sc=c;sd=c==='_tier'?1:-1;}
   document.querySelectorAll('tr.ch th').forEach(t=>t.classList.remove('s'));
   event?.target?.classList.add('s');
   sort();render();
@@ -231,7 +231,7 @@ function sort(){
 }
 
 const mc=v=>{if(v==null||isNaN(v))return'cw';const f=parseFloat(v);return f>8?'cg':f<-8?'cr':'cw';};
-const dot=v=>{
+const dot=(v,ac)=>{
   if(v==null||isNaN(parseFloat(v)))return'<span class="dot dnu"></span>';
   return`<span class="dot ${parseFloat(v)>=0?'don':'dof'}"></span>`;
 };
@@ -256,7 +256,7 @@ function pillHtml(sg){
   if(sg==='EXIT')return'<span style="color:#ff1744">Exit</span>';
   if(sg==='HIGH CONVICTION')return'<span style="color:#fff">Conviction</span>';
   if(sg==='MONITOR'||sg==='EXTENDED')return'<span style="color:#fff">Monitor</span>';
-  return'<span style="color:rgba(255,255,255,0.3)">Block</span>';
+  return'<span style="color:#fff">Block</span>';
 }
 
 const TIMING_STYLE={
@@ -264,7 +264,7 @@ const TIMING_STYLE={
   'PAUSE':'color:#fff','IGNITION':'color:#00e676','TREND HOLD':'color:#fff',
   'TREND FADE':'color:#ff1744','WEAK DIP':'color:#ff1744','EXT RISK':'color:#ff1744',
   'EXTENDED':'color:#ff1744','DEAD CAT':'color:#ff1744','WAIT':'color:#fff',
-  'EXIT':'color:#ff1744','BLOCK':'color:rgba(255,255,255,0.25)',
+  'EXIT':'color:#ff1744','BLOCK':'color:#fff',
 };
 const TIMING_LABEL={
   'CONFIRMED':'Confirmed','COOLING':'Cooling','DIP ENTRY':'Pause','PAUSE':'Pause',
@@ -273,7 +273,7 @@ const TIMING_LABEL={
   'DEAD CAT':'Dead Cat','WAIT':'Wait','EXIT':'Exit','BLOCK':'Block',
 };
 
-const DANGER=new Set(['EXIT','DEAD CAT','WEAK DIP','BLOCK']);
+const DANGER=new Set(['EXIT','DEAD CAT','WEAK DIP']);
 const GOOD=new Set(['CONFIRMED','COOLING','IGNITION','TREND HOLD','PAUSE','DIP ENTRY']);
 
 function render(){
