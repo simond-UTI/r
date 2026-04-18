@@ -108,7 +108,7 @@ tr.rbl>td:first-child{background:#13151a}</style></head><body>
       <th class="gsep hm tip" style="min-width:70px" onclick="sb('structure')"
           data-tip="Price structure via fractal pivots (10 bars each side).&#10;&#10;HH/HL:  last PH > prev PH AND last PL > prev PL (bullish geometry)&#10;LH/LL:  last PH < prev PH AND last PL < prev PL (bearish)&#10;HH/LL:  expanding range — volatility rising&#10;LH/HL:  contracting range — coiling before breakout&#10;INSUFF: not enough confirmed pivots yet&#10;&#10;Bold: |pct_to_ph| < 2% (imminent decision zone)&#10;Dim:  INSUFFICIENT&#10;&#10;READING GUIDE (Phase B harness 18 Apr 2026):&#10;Structure alone is a weak predictor.&#10;Edge lives in structure × state interaction.&#10;&#10;Strong signals identified:&#10;  HH/HL + DEAD CAT     → 20d +3.53%, 84% pos&#10;    (dip-buy candidate in genuine uptrend)&#10;  HH/HL + MELT UP/CLIMAX → 20d -10.46%, 16% pos&#10;    (textbook distribution — trim/exit)&#10;&#10;Use Structure as a reading enhancer for Timing,&#10;not as a standalone trigger.">Struct</th>
       <th class="hm tip" style="min-width:54px" onclick="sb('pct_to_ph')"
-          data-tip="Distance from latest close UP to last confirmed Pivot High.&#10;&#10;Formula: (last_ph − close) / close × 100&#10;&#10;Positive: PH is above current price — resistance ceiling&#10;Negative: price has broken above the last PH — clear air&#10;&#10;Bold: |value| < 2% (near decision point)&#10;White otherwise.">Dist PH</th>
+          data-tip="Distance from latest close UP to last confirmed Pivot High.&#10;&#10;Formula: (last_ph − close) / close × 100&#10;&#10;Positive: PH is above current price — resistance ceiling&#10;Negative: price has broken above the last PH — clear air&#10;&#10;COLOUR (Phase B harness earned, 18 Apr 2026):&#10;Green:     < -2% (broken above — fresh breakout)&#10;           mean_20d +1.7% to +4.7%, pos 60-71%&#10;Bold white: |value| < 2% (decision zone)&#10;White:     > +2% (clear air below ceiling)&#10;&#10;Strongest individual signal in the system based&#10;on Phase B evidence. Stronger than structure&#10;label or state × structure interactions.">Dist PH</th>
       <th class="hm tip" style="min-width:54px" onclick="sb('pct_to_pl')"
           data-tip="Distance from latest close DOWN to last confirmed Pivot Low.&#10;&#10;Formula: (close − last_pl) / close × 100&#10;&#10;Positive: PL is below current price — support floor&#10;Negative: price has broken below the last PL — floor gone&#10;&#10;Bold: |value| < 2% (near decision point)&#10;White otherwise.">Dist PL</th>
     </tr>
@@ -317,10 +317,27 @@ const struct=(s,pct_ph)=>{
   return`<span class="cw">${s}</span>`;
 };
 
-// Distance to Pivot High / Pivot Low.
-// Bold when within 2% either side (decision zone).
-// Negative = price above PH (broken out) / below PL (broken down).
-const distpv=v=>{
+// Distance to Pivot High.
+// Verdict colour earned via Phase B harness (18 Apr 2026):
+//   pct_to_ph < -2% (broken ABOVE last PH) → GREEN
+//     Evidence: all 4 structure classes show mean_20d +1.7% to +4.7%,
+//     pos 60-71%, n per class 1,800-7,900. Best forward signal tested.
+//   pct_to_ph within ±2% (decision zone) → BOLD WHITE
+//   pct_to_ph > 2% (clear air below) → normal white
+const distph=v=>{
+  if(v==null||isNaN(v))return'<span class="cdim">—</span>';
+  const f=parseFloat(v);
+  if(f < -2) return`<span style="color:#00e676;font-weight:600">${f.toFixed(2)}%</span>`;
+  if(Math.abs(f) < 2) return`<span style="color:#fff;font-weight:700">${f>=0?'+':''}${f.toFixed(2)}%</span>`;
+  return`<span style="color:#fff">${f>=0?'+':''}${f.toFixed(2)}%</span>`;
+};
+
+// Distance to Pivot Low.
+// Symmetric logic but NOT yet harness-confirmed for the downside.
+// Kept Phase A: bold when in decision zone, white otherwise.
+// pct_to_pl < -2% (broken BELOW last PL) would be bearish, but the
+// Phase B harness tested PH only. Re-test required before red colour.
+const distpl=v=>{
   if(v==null||isNaN(v))return'<span class="cdim">—</span>';
   const f=parseFloat(v);
   const near = Math.abs(f) < 2;
@@ -409,8 +426,8 @@ function render(){
       `<td class="hm">${pct(r.perf_1d)}</td>`+
       `<td class="hm gend">${pct(r.perf_5d)}</td>`+
       `<td class="gsep hm">${struct(r.structure, r.pct_to_ph)}</td>`+
-      `<td class="hm">${distpv(r.pct_to_ph)}</td>`+
-      `<td class="hm">${distpv(r.pct_to_pl)}</td>`+
+      `<td class="hm">${distph(r.pct_to_ph)}</td>`+
+      `<td class="hm">${distpl(r.pct_to_pl)}</td>`+
     `</tr>`;
   }).join('');
 }
