@@ -31,7 +31,7 @@
   <div class="sp tip" id="sp-blk"    onclick="setSig('BLOCK')"
        data-tip="Structural gate — not 'danger', just 'not on the menu'.&#10;&#10;Formula: trend<=8 OR vol=Compressed&#10;&#10;No entry conditions can be met here. Skip.">BLOCK —</div>
   <div class="sp tip" id="sp-tac"    onclick="setSig('TACTICAL')" style="color:#00e676"
-       data-tip="Active hunting ground — best entry windows today.&#10;&#10;Formula: CONVICTION + timing in&#10;{Confirmed, Pause, Cooling, Ignition, Trend Hold}&#10;+ Div between -20 and +80&#10;&#10;Quality aligned with strength, entry timing clean.">TACTICAL —</div>
+       data-tip="Active hunting ground — best entry windows today.&#10;&#10;Formula: CONVICTION + timing in&#10;{Confirmed, Pause, Cooling, Ignition, Trend Hold,&#10;Melt Up, Bounce} + Div between -20 and +80&#10;&#10;Quality aligned with strength, entry timing clean.">TACTICAL —</div>
   <div class="sp tip" id="sp-decay"  onclick="setSig('DECAY')" style="color:#ff1744"
        data-tip="Quality much better than strength AND losing ground.&#10;&#10;Formula: Div < -35 AND rank_move < 0&#10;&#10;Setups deteriorating faster than price shows.&#10;Risk-management view.">DECAY —</div>
 </div>
@@ -44,6 +44,7 @@
       <th colspan="3" class="gsep hm gend">Trend</th>
       <th colspan="2" class="gsep gend">Velocity</th>
       <th colspan="2" class="gsep hm gend">Volatility</th>
+      <th colspan="2" class="gsep hm gend">Volume</th>
       <th colspan="4" class="gsep hm gend">Price</th>
       <th colspan="4" class="gsep hm">Rank</th>
     </tr>
@@ -54,8 +55,8 @@
           data-tip="4-digit physics fingerprint: V·T·A·P&#10;&#10;Formula: V×1000 + T×100 + A×10 + P&#10;&#10;V (vol):   0=Comp 1=Norm 2=Exp&#10;T (trend): 0=Bear(≤8) 1=Bull(8-80) 2=Monster(>80)&#10;A (accel): 0=Broken 1=Pausing 2=Aligned 3=Ignition&#10;P (price): 0=Falling 1=Normal 2=Extended&#10;&#10;Example: 2221 = Exp/Monster/Aligned/Normal">DNA</th>
       <th class="tip" style="min-width:80px" onclick="sb('regime_signal')"
           data-tip="Overall verdict from DNA.&#10;&#10;CONVICTION: DNA in whitelist + trend>8 + vol NORM/EXP&#10;MONITOR:    trend>8 but not on whitelist&#10;EXTENDED:   price_z>1.5&#10;EXIT:       mom_d5<0 AND mom_d10<0&#10;BLOCK:      trend<=8 OR vol=Comp">Signal</th>
-      <th class="gend tip" style="min-width:90px" onclick="sb('entry_timing')"
-          data-tip="What the ticker is DOING right now (velocity).&#10;&#10;Green = entry-eligible&#10;White = hold/wait/neutral&#10;Red   = danger&#10;&#10;Confirmed:  all gears+, price normal&#10;Cooling:    pullback in a Monster trend (green)&#10;Ignition:   fresh turn, trend_d5>=2 (green)&#10;Trend Hold: near highs, mild pullback (white)&#10;Pause:      paused mid-move (white)&#10;Wait:       cooling but still elevated (white)&#10;Trend Fade: all+, but trend turning down (red)&#10;Ext Risk:   all+, getting stretched (red)&#10;Extended:   price_z>1.25 (red)&#10;Weak Dip:   structural dip, not a buy (red)&#10;Dead Cat:   bounce but trend still falling (red)&#10;Exit:       both horizons broken (red)">Timing</th>
+      <th class="gend tip" style="min-width:96px" onclick="sb('entry_timing')"
+          data-tip="What the ticker is DOING right now.&#10;&#10;Green = entry-eligible&#10;White = hold/wait/neutral&#10;Red   = danger&#10;&#10;Confirmed:  all gears+, price normal&#10;Cooling:    pullback in a Monster trend (green)&#10;Ignition:   fresh turn, trend_d5>=2 (green)&#10;Melt Up:    stretched + low vol drift (green)&#10;Bounce:     dead cat + high vol rebound (green)&#10;Trend Hold: near highs, mild pullback (white)&#10;Pause:      paused mid-move (white)&#10;Wait:       cooling but still elevated (white)&#10;Climax:     stretched + volume surge (red)&#10;Trend Fade: all+, but trend turning down (red)&#10;Ext Risk:   all+, getting stretched (red)&#10;Extended:   price_z>1.25 (red)&#10;Weak Dip:   structural dip, not a buy (red)&#10;Dead Cat:   low-vol failed bounce (red)&#10;Exit:       both horizons broken (red)">Timing</th>
       <th class="hm tip" style="min-width:80px"
           data-tip="What the DAILY chart says right now.&#10;&#10;Both agree danger = real, act (red)&#10;Live danger + Daily calm = intraday noise (amber)&#10;Both calm = trust the live read">EOD</th>
       <th class="gsep hm tip" style="min-width:50px" onclick="sb('trend')"
@@ -72,6 +73,10 @@
           data-tip="ATR-based volatility regime.&#10;&#10;Formula: atr vs 20-day average&#10;&#10;Compressed: blocks all entries (no room to move)&#10;Normal:     standard conditions&#10;Expanded:   high vol, often strong trends">Regime</th>
       <th class="hm gend tip" style="min-width:24px" onclick="sb('v_digit')"
           data-tip="Volatility digit of DNA.&#10;&#10;0=Compressed 1=Normal 2=Expanded">V</th>
+      <th class="gsep hm tip" style="min-width:56px" onclick="sb('rel_vol_20d')"
+          data-tip="Relative volume — today vs this ticker's own 20-day avg.&#10;&#10;Formula: today's volume / AVG(volume last 20 days)&#10;&#10;White: 0.8 – 1.3 (normal day)&#10;Red:   >=1.3 (volume spike — conviction signal)&#10;Dim:   <0.8 (quiet day)&#10;&#10;Used to split EXT RISK into CLIMAX/MELT UP&#10;and DEAD CAT into BOUNCE.">Rel Vol</th>
+      <th class="hm gend tip" style="min-width:56px" onclick="sb('vol_roc_3d')"
+          data-tip="Volume rate-of-change (3-day).&#10;&#10;Formula: today's rel_vol − AVG(rel_vol last 3 days)&#10;&#10;Positive: volume accelerating&#10;Negative: volume decelerating&#10;Near zero: steady&#10;&#10;Diagnostic only — not used for state labels yet.">Vol ROC</th>
       <th class="gsep hm tip" style="min-width:52px" onclick="sb('price_d5_z')"
           data-tip="How stretched price is vs its own recent history.&#10;&#10;Formula: 5d return z-score vs 60d distribution&#10;&#10;White: <0.85 (normal)&#10;Red:   >=0.85 (caution zone / extension)&#10;Red:   >1.25  (hard block: Extended timing)">Price Z</th>
       <th class="hm tip" style="min-width:44px" onclick="sb('range_pos_20d')"
@@ -90,33 +95,32 @@
           data-tip="Efficiency score: Rank − Q Rank.&#10;&#10;Positive: quality ahead of raw strength (clean setup)&#10;Negative: raw strength ahead of quality (momentum only)&#10;&#10;Green: -20 to +80  (healthy range)&#10;Red:   outside that range">Div</th>
     </tr>
   </thead>
-  <tbody id="tb"><tr><td colspan="21" class="msg">Loading…</td></tr></tbody>
+  <tbody id="tb"><tr><td colspan="23" class="msg">Loading…</td></tr></tbody>
 </table></div>
 
 <script>
 const SURL='https://pzskvslhfaituzyukasl.supabase.co';
 const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB6c2t2c2xoZmFpdHV6eXVrYXNsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQwNzQyNTAsImV4cCI6MjA3OTY1MDI1MH0.FEZTIIQ4zgdb7uswf70XZI9Ph6ykSeDkfxooIcRIOMw';
 const H={'apikey':KEY,'Authorization':'Bearer '+KEY};
-const COLS='symbol,name,group_name,watchlist,trend,momentum,mom_d5,mom_d10,trend_d5,price_d5_z,range_pos_20d,perf_1d,perf_5d,rank,rank_move,vol_regime,v_digit,t_digit,a_digit,p_digit,regime_id,regime_signal,entry_timing,q_rank,div';
+const COLS='symbol,name,group_name,watchlist,trend,momentum,mom_d5,mom_d10,trend_d5,price_d5_z,range_pos_20d,perf_1d,perf_5d,rank,rank_move,vol_regime,v_digit,t_digit,a_digit,p_digit,regime_id,regime_signal,entry_timing,q_rank,div,rel_vol_20d,vol_roc_3d';
 
 let all=[],eodMap={},filt=[],sc='q_rank',sd=1,sig='ALL',src='intraday',wl='UK ETFS',grp='';
 
 const TIER={'HIGH CONVICTION':1,'MONITOR':2,'EXTENDED':3,'EXIT':4,'BLOCK':5};
 const TIMING_TIER={
-  'BLOCK':0,'COOLING':1,'IGNITION':2,'CONFIRMED':3,
-  'TREND HOLD':4,'PAUSE':5,'EXT RISK':6,
-  'EXTENDED':7,'TREND FADE':8,'WEAK DIP':9,'DEAD CAT':10,'WAIT':11,'EXIT':12
+  'BLOCK':0,'COOLING':1,'IGNITION':2,'MELT UP':3,'BOUNCE':4,'CONFIRMED':5,
+  'TREND HOLD':6,'PAUSE':7,'CLIMAX':8,'EXT RISK':9,
+  'EXTENDED':10,'TREND FADE':11,'WEAK DIP':12,'DEAD CAT':13,'WAIT':14,'EXIT':15
 };
 const tsort=r=>(TIER[r.regime_signal]||6)*100000+(TIMING_TIER[r.entry_timing]||5)*1000+(r.rank&&r.rank<900?r.rank:9999);
 
-// Colour logic: white default, green = action up, red = action down
-const TIMING_GOOD = new Set(['COOLING','IGNITION']);
-const TIMING_BAD  = new Set(['EXIT','DEAD CAT','WEAK DIP','EXT RISK','EXTENDED','TREND FADE']);
+// Colour logic
+const TIMING_GOOD = new Set(['COOLING','IGNITION','MELT UP','BOUNCE']);
+const TIMING_BAD  = new Set(['EXIT','DEAD CAT','WEAK DIP','EXT RISK','EXTENDED','TREND FADE','CLIMAX']);
 
-// Tactical/Decay membership
-const TACTICAL_TIMINGS = new Set(['CONFIRMED','PAUSE','COOLING','IGNITION','TREND HOLD']);
-const DANGER_TIMINGS   = new Set(['EXIT','DEAD CAT','WEAK DIP']);
-const GOOD_TIMINGS     = new Set(['CONFIRMED','COOLING','IGNITION','TREND HOLD','PAUSE']);
+const TACTICAL_TIMINGS = new Set(['CONFIRMED','PAUSE','COOLING','IGNITION','TREND HOLD','MELT UP','BOUNCE']);
+const DANGER_TIMINGS   = new Set(['EXIT','DEAD CAT','WEAK DIP','CLIMAX']);
+const GOOD_TIMINGS     = new Set(['CONFIRMED','COOLING','IGNITION','TREND HOLD','PAUSE','MELT UP','BOUNCE']);
 
 async function load(){
   const v=src==='intraday'?'r_universe_live':'r_universe';
@@ -141,7 +145,7 @@ async function load(){
     }
     buildGroups();counts();af();
   }catch(e){
-    document.getElementById('tb').innerHTML=`<tr><td colspan="21" class="msg">Error — ${e.message}</td></tr>`;
+    document.getElementById('tb').innerHTML=`<tr><td colspan="23" class="msg">Error — ${e.message}</td></tr>`;
   }
 }
 
@@ -267,6 +271,22 @@ const rmv=v=>{
   return`<span style="color:${i>0?'#00e676':'#ff1744'}">${i>0?'+':''}${i}</span>`;
 };
 
+// Rel vol: red if >=1.3 (spike/climax), dim if <0.8 (quiet), white in between
+const relvol=v=>{
+  if(v==null||isNaN(v))return'<span class="cdim">—</span>';
+  const f=parseFloat(v);
+  const col = f>=1.3 ? '#ff1744' : f<0.8 ? 'rgba(255,255,255,0.35)' : '#fff';
+  return`<span style="color:${col}">${f.toFixed(2)}×</span>`;
+};
+
+// Vol ROC: green if rising, red if falling, dim if near zero
+const volroc=v=>{
+  if(v==null||isNaN(v))return'<span class="cdim">—</span>';
+  const f=parseFloat(v);
+  const col = f>0.5 ? '#00e676' : f<-0.5 ? '#ff1744' : 'rgba(255,255,255,0.55)';
+  return`<span style="color:${col}">${f>=0?'+':''}${f.toFixed(2)}</span>`;
+};
+
 const VL={'EXP':'Expanded','NORM':'Normal','COMP':'Compressed'};
 const VC={'COMP':'cr','EXP':'cw','NORM':'cw'};
 const RC={'HIGH CONVICTION':'rhc','MONITOR':'rmo','EXTENDED':'rmo','EXIT':'rxt','BLOCK':'rbl'};
@@ -287,6 +307,7 @@ function timingColour(t){
 const TIMING_LABEL={
   'CONFIRMED':'Confirmed','COOLING':'Cooling','PAUSE':'Pause',
   'IGNITION':'Ignition','TREND HOLD':'Trend Hold',
+  'MELT UP':'Melt Up','BOUNCE':'Bounce','CLIMAX':'Climax',
   'TREND FADE':'Trend Fade','WEAK DIP':'Weak Dip','EXT RISK':'Ext Risk',
   'EXTENDED':'Extended','DEAD CAT':'Dead Cat','WAIT':'Wait',
   'EXIT':'Exit','BLOCK':'Block',
@@ -294,7 +315,7 @@ const TIMING_LABEL={
 
 function render(){
   const tb=document.getElementById('tb');
-  if(!filt.length){tb.innerHTML='<tr><td colspan="21" class="msg">No results</td></tr>';return;}
+  if(!filt.length){tb.innerHTML='<tr><td colspan="23" class="msg">No results</td></tr>';return;}
   tb.innerHTML=filt.map(r=>{
     const sg=r.regime_signal||'MONITOR';
     const dna=String(r.regime_id||0).padStart(4,'0');
@@ -308,10 +329,6 @@ function render(){
     const eod=eodMap[r.symbol];
     const eodTim=eod?eod.timing:'';
     const eodLbl=eodTim?(TIMING_LABEL[eodTim]||eodTim):'—';
-    // EOD disagreement logic:
-    //   live danger + EOD good    -> AMBER (intraday noise, patience filter)
-    //   live danger + EOD danger  -> red (both agree, act)
-    //   otherwise                 -> colour the EOD value by its own state
     const isConflict=DANGER_TIMINGS.has(tim)&&GOOD_TIMINGS.has(eodTim);
     const isAgreed=DANGER_TIMINGS.has(tim)&&DANGER_TIMINGS.has(eodTim);
     const eodStyle = isConflict ? 'color:#ffaa00'
@@ -340,6 +357,8 @@ function render(){
       `<td class="gend"><span class="cw">${r.a_digit!=null?r.a_digit:'—'}</span></td>`+
       `<td class="gsep hm"><span class="${VC[r.vol_regime]||'cw'}">${VL[r.vol_regime]||r.vol_regime||'—'}</span></td>`+
       `<td class="hm gend"><span class="cw">${r.v_digit!=null?r.v_digit:'—'}</span></td>`+
+      `<td class="gsep hm">${relvol(r.rel_vol_20d)}</td>`+
+      `<td class="hm gend">${volroc(r.vol_roc_3d)}</td>`+
       `<td class="gsep hm"><span style="${pzStyle}">${num(r.price_d5_z,2)}</span></td>`+
       `<td class="hm"><span style="${r20Style}">${r.range_pos_20d!=null?r20.toFixed(2):'—'}</span></td>`+
       `<td class="hm">${pct(r.perf_1d)}</td>`+
